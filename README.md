@@ -2,7 +2,9 @@
 
 ## Overview
 
-<img src="assets/LVMark.png" width="450">
+<div align="center">
+  <img src="assets/LVMark.png" width="450">
+</div>
 
 Recent advancements in video diffusion models have enabled the generation of photorealistic videos, raising critical concerns about unauthorized use and model ownership.  
 While existing watermarking methods have proven effective in image domains, they often fail in video scenarios due to a lack of temporal consistency, resulting in degraded visual quality and vulnerability to distortions.
