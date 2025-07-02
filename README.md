@@ -1,35 +1,61 @@
 # LVMark: Robust Watermark for Latent Video Diffusion Models
 
 ## Overview
+
 <img src="assets/LVMark.png" width="450">
-Rapid advancements in video diffusion models have enabled the creation of realistic videos, raising concerns about unauthorized use and driving the demand for techniques to protect model ownership. Existing watermarking methods, while effective for image diffusion models, do not account for temporal consistency, leading to degraded video quality and reduced robustness against video distortions. To address this issue, we introduce LVMark, a novel watermarking method for video diffusion models. We propose a new watermark decoder tailored for generated videos by learning the consistency between adjacent frames. It ensures accurate message decoding, even under malicious attacks, by combining the low-frequency components of the 3D wavelet domain with the RGB features of the video. Additionally, our approach minimizes video quality degradation by embedding watermark messages in layers with minimal impact on visual appearance using an importance-based weight modulation strategy. We optimize both the watermark decoder and the latent decoder of diffusion model, effectively balancing the trade-off between visual quality and bit accuracy. Our experiments show that our method embeds invisible watermarks into video diffusion models, ensuring robust decoding accuracy with 512-bit capacity, even under video distortions.
+
+Recent advancements in video diffusion models have enabled the generation of photorealistic videos, raising critical concerns about unauthorized use and model ownership.  
+While existing watermarking methods have proven effective in image domains, they often fail in video scenarios due to a lack of temporal consistency, resulting in degraded visual quality and vulnerability to distortions.
+
+**LVMark** addresses this challenge by introducing a novel watermarking method specifically designed for video diffusion models.  
+Our approach leverages temporal consistency across adjacent frames and embeds watermark bits into the **low-frequency components of the 3D wavelet domain** and **RGB features**.  
+To preserve perceptual quality, we adopt an **importance-based weight modulation strategy**, embedding only in layers with minimal impact on appearance.
+
+We jointly optimize the watermark decoder and the latent decoder within the diffusion model, achieving a balance between **visual quality** and **bit accuracy**.  
+Our experiments demonstrate that LVMark can embed **invisible, robust 512-bit watermarks** that remain detectable under various video distortions and attacks.
+
+---
 
 ## Requirements
-Preliminary requirements:
-- Python>=3.8
-- PyTorch==2.4.1
 
-Run the following command:
-```
+- Python ≥ 3.8  
+- PyTorch == 2.4.1
+
+Install dependencies:
+
+```bash
 pip3 install -r requirements.txt
+````
+
+---
+
+## Dataset
+
+The training dataset can be downloaded from the following link:
+👉 [Panda-70M](https://github.com/snap-research/Panda-70M)
+
+---
+
+## H.264 Attack Simulation
+
+To simulate real-world compression, we include a pretrained **H.264 distortion network** as part of our Attack Distortion Layer.
+This module ensures watermark robustness against lossy encoding methods like H.264.
+
+Checkpoint path:
+
+```
+attack_methods/diff_h264/checkpoints/model_weights_epoch_20.pth
 ```
 
-## Datasets
-The training dataset can be downloaded from:
-[Panda-70M](https://github.com/snap-research/Panda-70M)
+---
 
 ## Code Usage
 
+### Training and Evaluation
 
-To evaluate watermark robustness against video compression, we include a pretrained H.264 distortion network as part of our Attack Distortion Layer.  
-This module simulates real-world H.264 encoding effects, ensuring that watermarks can be reliably detected even after compression.
+Use the following command to train and evaluate LVMark:
 
-Checkpoint path:  
-`attack_methods/diff_h264/checkpoints/model_weights_epoch_20.pth`
-
-
-Use `trainval_LVMark.py` to train and evaluate the model:
-```
+```bash
 CUDA_VISIBLE_DEVICES=0 accelerate launch ./trainval_LVMark.py \
     --pretrained_model_name_or_path ./DynamiCrafter/checkpoints/dynamicrafter_512_v1/model.ckpt \
     --model_config ./DynamiCrafter/configs/inference_1024_v1.0.yaml \
@@ -38,7 +64,7 @@ CUDA_VISIBLE_DEVICES=0 accelerate launch ./trainval_LVMark.py \
     --train_batch_size 1 \
     --exp_name {exp name} \
     --train_dir {train dataset path} \
-    --val_dir {valid dataset path}\
+    --val_dir {valid dataset path} \
     --n_frames 8 \
     --resolution 256 \
     --train_steps_per_epoch 250 \
@@ -47,7 +73,8 @@ CUDA_VISIBLE_DEVICES=0 accelerate launch ./trainval_LVMark.py \
     --phi_dimension 32 \
     --attack all \
     --output_dir output_1024 \
-    --seed 2777 --dim 2048 \
+    --seed 2777 \
+    --dim 2048 \
     --learning_rate 1e-4 \
     --lambda_w 0.8 \
     --lambda_lpips 0.7 \
@@ -56,35 +83,53 @@ CUDA_VISIBLE_DEVICES=0 accelerate launch ./trainval_LVMark.py \
     --lambda_patch_l1 10
 ```
 
-Use `inference_watermark.sh` to generate watermarked videos:
-```
+---
+
+### Inference (Watermark Embedding)
+
+To generate watermarked videos:
+
+```bash
 cd ./DynamiCrafter/scripts
 . ./inference_watermark.sh
 ```
 
-Use `metrics_for_videos.sh` to compute evaluation metrics:
-```
+---
+
+### Metric Evaluation
+
+To compute quantitative evaluation metrics:
+
+```bash
 cd ./DynamiCrafter/scripts/metric_using_video
 . ./metrics_for_videos.sh
 ```
 
+---
+
 ## Integration with Open-Sora
 
-To embed watermarks into Open-Sora, please refer to the official repository:  
-[Open-Sora](https://github.com/hpcaitech/Open-Sora)
+Watermark embedding can also be applied to [Open-Sora](https://github.com/hpcaitech/Open-Sora).
+You can train Open-Sora using the provided files:
 
-You can train Open-Sora using the provided `customization_sora.py` and `layer_noise_0.5_sora.txt` files.
+* `customization_sora.py`
+* `layer_noise_0.5_sora.txt`
 
+---
 
 ## Citation
+
+If you find this work useful, please consider citing:
+
 ```bibtex
 @misc{jang2025lvmarkrobustwatermarklatent,
-      title={LVMark: Robust Watermark for Latent Video Diffusion Models}, 
-      author={MinHyuk Jang and Youngdong Jang and JaeHyeok Lee and Feng Yang and Gyeongrok Oh and Jongheon Jeong and Sangpil Kim},
-      year={2025},
-      eprint={2412.09122},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2412.09122}, 
+  title         = {LVMark: Robust Watermark for Latent Video Diffusion Models},
+  author        = {MinHyuk Jang and Youngdong Jang and JaeHyeok Lee and Feng Yang and Gyeongrok Oh and Jongheon Jeong and Sangpil Kim},
+  year          = {2025},
+  eprint        = {2412.09122},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2412.09122}
 }
 ```
+
