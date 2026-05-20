@@ -28,6 +28,11 @@ pip3 install -r requirements.txt
 The training dataset can be downloaded from the following link:
 👉 [Panda-70M](https://github.com/snap-research/Panda-70M)
 
+## **Weights**
+
+We provide weights presented in our paper.
+- 📥 **Download**: [Link](https://kuaicv.synology.me/weights/TIFS2026/lvmark/lvmark_weights.zip)
+
 ---
 
 ## H.264 Attack Simulation
