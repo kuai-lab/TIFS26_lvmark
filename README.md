@@ -116,14 +116,12 @@ You can train Open-Sora using the provided files:
 If you find this work useful, please consider citing:
 
 ```bibtex
-@misc{jang2025lvmarkrobustwatermarklatent,
-  title         = {LVMark: Robust Watermark for Latent Video Diffusion Models},
-  author        = {MinHyuk Jang and Youngdong Jang and JaeHyeok Lee and Feng Yang and Gyeongrok Oh and Jongheon Jeong and Sangpil Kim},
-  year          = {2025},
-  eprint        = {2412.09122},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CV},
-  url           = {https://arxiv.org/abs/2412.09122}
+@article{jang2026lvmark,
+  title={Lvmark: Robust watermark for latent video diffusion models},
+  author={Jang, Youngdong and Jang, Minhyuk and Lee, JaeHyeok and Yang, Feng and Oh, Gyeongrok and Jeong, Jongheon and Kim, Sangpil},
+  journal={IEEE Transactions on Information Forensics and Security},
+  year={2026},
+  publisher={IEEE}
 }
 ```
 
